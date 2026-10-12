@@ -1,6 +1,7 @@
-.env
-/backend/config.db
+.env/
+backend/config.db
 .superpowers/
 uvicorn_err.log
 uvicorn_out.log
 poetry.lock
+__pycache__/
