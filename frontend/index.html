@@ -263,39 +263,7 @@
             font-family: var(--font-mono);
         }
 
-        .search-box {
-            position: relative;
-            min-width: 240px;
-            flex: 1;
-            max-width: 380px;
-        }
 
-        .search-input {
-            width: 100%;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 8px 14px 8px 36px;
-            font-size: 0.85rem;
-            color: var(--text-title);
-            outline: none;
-            transition: var(--transition-smooth);
-        }
-
-        .search-input:focus {
-            border-color: var(--border-focus);
-            box-shadow: 0 0 0 3px var(--accent-subtle);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            pointer-events: none;
-        }
 
         /* ==========================================================================
            4. CARDS, LISTS & COMPONENTS
@@ -808,13 +776,10 @@
                 </button>
             </div>
 
-            <div class="search-box">
-                <span class="search-icon">&#128269;</span>
-                <input type="text" id="filter-input" class="search-input" placeholder="Buscar atalhos, modelos, prompts..." oninput="filterItems()">
-            </div>
+
         </div>
 
-        <!-- App Content Shell (Transforms to Split Workbench in Command Hub) -->
+        <!-- App Content Shell -->
         <div id="content-shell" class="standard-layout">
 
             <!-- ==========================================
@@ -1104,16 +1069,7 @@
             document.getElementById('badge-providers').textContent = rawProviders.length;
         }
 
-        /* ---------- 7.4 LIVE SEARCH FILTER ---------- */
-        function filterItems() {
-            const query = document.getElementById('filter-input').value.toLowerCase().trim();
-            const cards = document.querySelectorAll('.cards-list .card');
 
-            cards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                card.style.display = text.includes(query) ? 'flex' : 'none';
-            });
-        }
 
         /* ---------- 7.5 API: PROVIDERS ---------- */
         async function fetchProviders() {
@@ -1164,7 +1120,6 @@
                 });
 
                 updateBadges();
-                filterItems();
             } catch (err) {
                 showToast(err.message, 'error');
             }
@@ -1297,7 +1252,6 @@
                 });
 
                 updateBadges();
-                filterItems();
             } catch (err) {
                 showToast(err.message, 'error');
             }
@@ -1425,7 +1379,6 @@
                 });
 
                 updateBadges();
-                filterItems();
             } catch (err) {
                 showToast(err.message, 'error');
             }
