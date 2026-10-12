@@ -1,236 +1,1062 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Hotkeys Configuration</title>
+    <title>iaKey &bull; AI Hotkeys Configuration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f8fafc;
+        /* ==========================================================================
+           1. DESIGN SYSTEM & CSS VARIABLES
+           ========================================================================== */
+        :root {
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            --radius-xs: 4px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --transition-smooth: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 🌙 1. RAYCAST DARK (Default Pro Developer Dark Mode) */
+        body.theme-raycast {
+            --bg-page: #090a10;
+            --bg-surface: #12141e;
+            --bg-surface-elevated: #171a26;
+            --bg-input: #1a1d2c;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-medium: rgba(255, 255, 255, 0.16);
+            --border-focus: #6366f1;
+            --text-title: #f8fafc;
+            --text-body: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-subtle: rgba(99, 102, 241, 0.15);
+            --accent-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+            --kbd-bg: #1c2032;
+            --kbd-border: #333a56;
+            --kbd-shadow: #0c0e17;
+            --kbd-text: #e2e8f0;
+            --danger: #f43f5e;
+            --danger-bg: rgba(244, 63, 94, 0.14);
+            --warning: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.14);
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.14);
+            --header-glass: rgba(18, 20, 30, 0.85);
+            --box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ☀️ 2. CLEAN LIGHT (Modern Linear / Apple Minimalist) */
+        body.theme-light {
+            --bg-page: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-surface-elevated: #f1f5f9;
+            --bg-input: #ffffff;
+            --border-subtle: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --border-focus: #2563eb;
+            --text-title: #0f172a;
+            --text-body: #475569;
+            --text-muted: #94a3b8;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-subtle: rgba(37, 99, 235, 0.1);
+            --accent-glow: 0 0 15px rgba(37, 99, 235, 0.18);
+            --kbd-bg: #ffffff;
+            --kbd-border: #cbd5e1;
+            --kbd-shadow: #94a3b8;
+            --kbd-text: #1e293b;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+            --success: #059669;
+            --success-bg: #d1fae5;
+            --header-glass: rgba(255, 255, 255, 0.9);
+            --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+        }
+
+        /* ⚡ 3. COMMAND HUB (Split Master-Detail Workbench) */
+        body.theme-command {
+            --bg-page: #0a0b0e;
+            --bg-surface: #11131a;
+            --bg-surface-elevated: #181b24;
+            --bg-input: #0e1017;
+            --border-subtle: #1f2333;
+            --border-medium: #2e344a;
+            --border-focus: #06b6d4;
+            --text-title: #f1f5f9;
+            --text-body: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #06b6d4;
+            --accent-hover: #0891b2;
+            --accent-subtle: rgba(6, 182, 212, 0.15);
+            --accent-glow: 0 0 20px rgba(6, 182, 212, 0.3);
+            --kbd-bg: #161a25;
+            --kbd-border: #283044;
+            --kbd-shadow: #0a0c12;
+            --kbd-text: #38bdf8;
+            --danger: #fb7185;
+            --danger-bg: rgba(251, 113, 133, 0.15);
+            --warning: #fbbf24;
+            --warning-bg: rgba(251, 191, 36, 0.15);
+            --success: #34d399;
+            --success-bg: rgba(52, 211, 153, 0.15);
+            --header-glass: rgba(17, 19, 26, 0.9);
+            --box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        /* ==========================================================================
+           2. GLOBAL STYLES & RESET
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            color: #334155;
+            padding: 0;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-        }
-
-        h1,
-        h2 {
-            color: #1e293b;
-        }
-
-        .section {
-            margin-bottom: 40px;
-        }
-
-        .card {
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #f1f5f9;
-            position: relative;
-        }
-
-        .card-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-
-        .card-actions {
-            position: absolute;
-            top: 15px;
-            right: 15px;
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            line-height: 1.5;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
+            transition: background-color 0.25s ease, color 0.25s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Sticky Navbar */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--header-glass);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 24px;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: var(--accent-glow);
+        }
+
+        .brand-text h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Theme / Style Switcher Toolbar */
+        .theme-switcher {
+            display: inline-flex;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            padding: 3px;
+            border-radius: var(--radius-md);
+            gap: 3px;
+        }
+
+        .theme-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition-smooth);
+        }
+
+        .theme-btn:hover {
+            color: var(--text-title);
+        }
+
+        .theme-btn.active {
+            background: var(--bg-surface);
+            color: var(--text-title);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* ==========================================================================
+           3. MAIN LAYOUT
+           ========================================================================== */
+        .main-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+            flex: 1;
+        }
+
+        /* Layout modifications in Command Hub mode */
+        body.theme-command .main-container {
+            max-width: 1380px;
+        }
+
+        body.theme-command .command-layout {
+            display: grid;
+            grid-template-columns: 440px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            body.theme-command .command-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Navigation Tabs & Controls */
+        .view-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tabs-nav {
+            display: inline-flex;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            gap: 4px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-smooth);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-title);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: var(--accent-glow);
+        }
+
+        .tab-badge {
+            font-size: 0.72rem;
+            padding: 1px 7px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.18);
+            font-family: var(--font-mono);
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 240px;
+            flex: 1;
+            max-width: 380px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 8px 14px 8px 36px;
+            font-size: 0.85rem;
+            color: var(--text-title);
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .search-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px var(--accent-subtle);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           4. CARDS, LISTS & COMPONENTS
+           ========================================================================== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
             gap: 8px;
         }
 
+        .cards-list {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            position: relative;
+            transition: var(--transition-smooth);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .card:hover {
+            border-color: var(--border-medium);
+            transform: translateY(-1px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .card-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-title);
+        }
+
+        .card-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .card-meta {
+            font-size: 0.8rem;
+            color: var(--text-body);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .card-meta em {
+            color: var(--text-title);
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .meta-tag {
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: var(--radius-xs);
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+        }
+
+        /* Chiclet Keys Keyboard Badges */
+        .shortcut-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        kbd {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            font-weight: 600;
+            background: var(--kbd-bg);
+            color: var(--kbd-text);
+            border: 1px solid var(--kbd-border);
+            border-bottom: 2px solid var(--kbd-border);
+            box-shadow: 0 2px 0 var(--kbd-shadow);
+            border-radius: 6px;
+            padding: 3px 8px;
+            line-height: 1.2;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .shortcut-badge .plus {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            user-select: none;
+        }
+
+        /* Actions */
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
         .action-btn {
-            border: none;
-            padding: 5px 10px;
-            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface-elevated);
+            color: var(--text-body);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            font-size: 0.9em;
-            font-weight: bold;
+            font-size: 0.78rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .delete-btn {
-            background: #fca5a5;
-            color: white;
-        }
-
-        .delete-btn:hover {
-            background: #f87171;
-        }
-
-        .edit-btn {
-            background: #fde047;
-            color: #854d0e;
+        .action-btn:hover {
+            color: var(--text-title);
+            border-color: var(--border-medium);
         }
 
         .edit-btn:hover {
-            background: #facc15;
+            border-color: var(--warning);
+            color: var(--warning);
+            background: var(--warning-bg);
+        }
+
+        .delete-btn:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+            background: var(--danger-bg);
+        }
+
+        /* Empty states */
+        .empty-placeholder {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--bg-surface);
+            border: 2px dashed var(--border-subtle);
+            border-radius: var(--radius-lg);
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .empty-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            opacity: 0.6;
+        }
+
+        /* ==========================================================================
+           5. FORMS & INPUTS
+           ========================================================================== */
+        .form-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--box-shadow);
+            margin-top: 16px;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .form-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 16px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            font-size: 0.9em;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        label .label-tip {
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: var(--text-muted);
         }
 
         input[type="text"],
         input[type="password"],
         select {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            box-sizing: border-box;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            color: var(--text-title);
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition-smooth);
         }
 
-        button {
-            background: #93c5fd;
-            color: white;
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px var(--accent-subtle);
+        }
+
+        /* Interactive Shortcut Input Recorder */
+        .shortcut-recorder-wrap {
+            position: relative;
+        }
+
+        #h-keys {
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            background: var(--bg-surface-elevated);
+            color: var(--accent);
+            letter-spacing: 0.03em;
+        }
+
+        #h-keys.recording {
+            background-color: var(--accent-subtle) !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 0 3px var(--accent-subtle), var(--accent-glow) !important;
+            animation: pulse-recording 1.6s infinite ease-in-out;
+        }
+
+        @keyframes pulse-recording {
+            0% { border-color: var(--accent); }
+            50% { border-color: #a855f7; }
+            100% { border-color: var(--accent); }
+        }
+
+        .recording-hint {
+            display: none;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        #h-keys.recording + .recording-hint {
+            display: block;
+        }
+
+        /* Form Buttons */
+        .btn-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        button.btn-primary {
+            background: var(--accent);
+            color: #ffffff;
             border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: bold;
+            box-shadow: var(--accent-glow);
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        button:hover {
-            background: #60a5fa;
+        button.btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
         }
 
-        #hotkey-input {
+        button.btn-secondary {
+            background: var(--bg-surface-elevated);
+            color: var(--text-body);
+            border: 1px solid var(--border-subtle);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
-            background-color: #f0f9ff;
-            border-color: #bae6fd;
+            transition: var(--transition-smooth);
         }
 
-        .recording {
-            background-color: #fef08a !important;
-            border-color: #fde047 !important;
+        button.btn-secondary:hover {
+            color: var(--text-title);
+            background: var(--bg-surface);
+            border-color: var(--border-medium);
         }
 
-        .error {
-            color: #f87171;
-            margin-top: 5px;
-            font-size: 0.9em;
+        /* ==========================================================================
+           6. TOAST NOTIFICATIONS & MODALS
+           ========================================================================== */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            color: var(--text-title);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toast-slide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 380px;
+        }
+
+        @keyframes toast-slide {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.info { border-left: 4px solid var(--accent); }
+
+        /* Modal Confirm Dialog */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            animation: toast-slide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-title);
+            margin-bottom: 8px;
+        }
+
+        .modal-body {
+            font-size: 0.88rem;
+            color: var(--text-body);
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Section Visibility & Helpers */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* In Command Hub mode, sections can display side-by-side or stacked cleanly */
+        body.theme-command .tab-content {
+            display: block !important;
+        }
+
+        body.theme-command .tab-content.collapsed {
+            display: none !important;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 650px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .theme-switcher {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .card-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
         }
     </style>
 </head>
 
-<body>
+<body class="theme-raycast">
 
-    <div class="container">
-        <h1>AI Hotkeys Configuration</h1>
+    <!-- Sticky Header with Brand and Style Switcher -->
+    <header class="app-header">
+        <div class="header-inner">
+            <div class="brand-group">
+                <div class="brand-logo">&#9889;</div>
+                <div class="brand-text">
+                    <h1>iaKey &bull; AI Hotkeys</h1>
+                    <p>Atalhos globais integrados aos seus modelos de inteligência artificial</p>
+                </div>
+            </div>
 
-        <div class="section" id="providers-section">
-            <h2>Providers</h2>
-            <div id="providers-list"></div>
+            <!-- Style Selector Toolbar -->
+            <div class="theme-switcher">
+                <button type="button" class="theme-btn active" data-theme="theme-raycast" onclick="switchTheme('theme-raycast')">
+                    <span>&#127769;</span> Raycast Dark
+                </button>
+                <button type="button" class="theme-btn" data-theme="theme-light" onclick="switchTheme('theme-light')">
+                    <span>&#9728;&#65039;</span> Clean Light
+                </button>
+                <button type="button" class="theme-btn" data-theme="theme-command" onclick="switchTheme('theme-command')">
+                    <span>&#9889;</span> Command Hub
+                </button>
+            </div>
+        </div>
+    </header>
 
-            <div class="card">
-                <div class="card-title">Add New Provider</div>
-                <form id="provider-form">
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" id="p-name" placeholder="e.g. OpenAI, Local" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Base URL</label>
-                        <input type="text" id="p-baseurl" placeholder="e.g. https://api.openai.com/v1" required>
-                    </div>
-                    <div class="form-group">
-                        <label>API Key</label>
-                        <input type="password" id="p-apikey" placeholder="sk-..." required>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button type="submit">Save Provider</button>
-                        <button type="button" id="p-cancel" style="display:none; background:#cbd5e1; color:#334155;">Cancel</button>
-                    </div>
-                </form>
+    <main class="main-container">
+
+        <!-- Navigation Tabs & Search Controls -->
+        <div class="view-controls">
+            <div class="tabs-nav" id="section-tabs">
+                <button type="button" class="tab-btn active" data-tab="hotkeys-tab" onclick="switchTab('hotkeys-tab')">
+                    <span>&#9889; Atalhos</span>
+                    <span class="tab-badge" id="badge-hotkeys">0</span>
+                </button>
+                <button type="button" class="tab-btn" data-tab="models-tab" onclick="switchTab('models-tab')">
+                    <span>&#129504; Modelos</span>
+                    <span class="tab-badge" id="badge-models">0</span>
+                </button>
+                <button type="button" class="tab-btn" data-tab="providers-tab" onclick="switchTab('providers-tab')">
+                    <span>&#128268; Provedores</span>
+                    <span class="tab-badge" id="badge-providers">0</span>
+                </button>
+            </div>
+
+            <div class="search-box">
+                <span class="search-icon">&#128269;</span>
+                <input type="text" id="filter-input" class="search-input" placeholder="Buscar atalhos, modelos, prompts..." oninput="filterItems()">
             </div>
         </div>
 
-        <div class="section" id="models-section">
-            <h2>Models</h2>
-            <div id="models-list"></div>
+        <!-- App Content Shell (Transforms to Split Workbench in Command Hub) -->
+        <div id="content-shell" class="standard-layout">
 
-            <div class="card">
-                <div class="card-title">Add New Model</div>
-                <form id="model-form">
-                    <div class="form-group">
-                        <label>Name (Identifier)</label>
-                        <input type="text" id="m-name" placeholder="e.g. Local Llama 3, OpenAI GPT-4" required>
+            <!-- ==========================================
+                 SECTION 1: HOTKEYS
+                 ========================================== -->
+            <div id="hotkeys-tab" class="tab-content active">
+                <div class="section-header">
+                    <h2 class="section-title">&#9889; Atalhos de Teclado Cadastrados</h2>
+                </div>
+
+                <div id="hotkeys-list" class="cards-list"></div>
+
+                <div class="form-card">
+                    <div class="form-header">
+                        <div class="form-title" id="hotkey-form-title">&#10133; Adicionar Novo Atalho</div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Configure o gatilho e o prompt</span>
                     </div>
-                    <div class="form-group">
-                        <label>Provider</label>
-                        <select id="m-provider" required>
-                            <option value="">Select a provider...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Model Name</label>
-                        <input type="text" id="m-modelname" placeholder="e.g. gpt-4, llama3" required>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button type="submit">Save Model</button>
-                        <button type="button" id="m-cancel" style="display:none; background:#cbd5e1; color:#334155;">Cancel</button>
-                    </div>
-                </form>
+                    <form id="hotkey-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="h-keys">
+                                    <span>Combinação de Teclas</span>
+                                    <span class="label-tip">Clique para gravar</span>
+                                </label>
+                                <div class="shortcut-recorder-wrap">
+                                    <input type="text" id="h-keys" placeholder="Clique aqui e pressione as teclas (ex: alt+t)" readonly required>
+                                    <div class="recording-hint">&#9889; Gravando atalho... Pressione as teclas no teclado e clique fora para confirmar.</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="h-prefix">
+                                    <span>Prefixo do Prompt da IA</span>
+                                    <span class="label-tip">Instrução enviada com o texto copiado</span>
+                                </label>
+                                <input type="text" id="h-prefix" placeholder="Ex: Traduza para o português com clareza:" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="h-model">
+                                    <span>Modelo de IA Alvo</span>
+                                    <span class="label-tip">Qual modelo processará este comando</span>
+                                </label>
+                                <select id="h-model" required>
+                                    <option value="">Selecione um modelo...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="h-desc">
+                                    <span>Descrição do Atalho (Opcional)</span>
+                                    <span class="label-tip">Nome curto para identificação rápida</span>
+                                </label>
+                                <input type="text" id="h-desc" placeholder="Ex: Traduzir texto copiado">
+                            </div>
+
+                            <div class="btn-row">
+                                <button type="submit" class="btn-primary">&#128190; Salvar Atalho</button>
+                                <button type="button" id="h-cancel" class="btn-secondary" style="display:none;">Cancelar Edição</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
+
+            <!-- ==========================================
+                 SECTION 2: MODELS
+                 ========================================== -->
+            <div id="models-tab" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">&#129504; Modelos de IA Configurados</h2>
+                </div>
+
+                <div id="models-list" class="cards-list"></div>
+
+                <div class="form-card">
+                    <div class="form-header">
+                        <div class="form-title" id="model-form-title">&#10133; Adicionar Novo Modelo</div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Vincule ao seu provedor</span>
+                    </div>
+                    <form id="model-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="m-name">
+                                    <span>Identificador Amigável</span>
+                                    <span class="label-tip">Nome de exibição</span>
+                                </label>
+                                <input type="text" id="m-name" placeholder="Ex: GPT-4o Rápido, Llama 3 Local" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="m-provider">
+                                    <span>Provedor de API</span>
+                                    <span class="label-tip">Onde a requisição será feita</span>
+                                </label>
+                                <select id="m-provider" required>
+                                    <option value="">Selecione um provedor...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="m-modelname">
+                                    <span>Nome Técnico do Modelo</span>
+                                    <span class="label-tip">Parâmetro exato enviado na API</span>
+                                </label>
+                                <input type="text" id="m-modelname" placeholder="Ex: gpt-4o-mini, llama3:latest" required>
+                            </div>
+
+                            <div class="btn-row">
+                                <button type="submit" class="btn-primary">&#128190; Salvar Modelo</button>
+                                <button type="button" id="m-cancel" class="btn-secondary" style="display:none;">Cancelar Edição</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ==========================================
+                 SECTION 3: PROVIDERS
+                 ========================================== -->
+            <div id="providers-tab" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">&#128268; Provedores de API</h2>
+                </div>
+
+                <div id="providers-list" class="cards-list"></div>
+
+                <div class="form-card">
+                    <div class="form-header">
+                        <div class="form-title" id="provider-form-title">&#10133; Adicionar Novo Provedor</div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Endpoints e credenciais seguras</span>
+                    </div>
+                    <form id="provider-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="p-name">
+                                    <span>Nome do Provedor</span>
+                                    <span class="label-tip">Ex: OpenAI, Groq, Ollama</span>
+                                </label>
+                                <input type="text" id="p-name" placeholder="Ex: OpenAI, Groq, Ollama Local" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="p-baseurl">
+                                    <span>Base URL</span>
+                                    <span class="label-tip">URL base compatível com OpenAI</span>
+                                </label>
+                                <input type="text" id="p-baseurl" placeholder="Ex: https://api.openai.com/v1 ou http://localhost:11434/v1" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="p-apikey">
+                                    <span>API Key</span>
+                                    <span class="label-tip">Chave de autenticação</span>
+                                </label>
+                                <input type="password" id="p-apikey" placeholder="sk-..." required>
+                            </div>
+
+                            <div class="btn-row">
+                                <button type="submit" class="btn-primary">&#128190; Salvar Provedor</button>
+                                <button type="button" id="p-cancel" class="btn-secondary" style="display:none;">Cancelar Edição</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
+    </main>
 
-        <div class="section" id="hotkeys-section">
-            <h2>Hotkeys</h2>
-            <div id="hotkeys-list"></div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
 
-            <div class="card">
-                <div class="card-title">Add New Hotkey</div>
-                <form id="hotkey-form">
-                    <div class="form-group">
-                        <label>Shortcut Keys</label>
-                        <input type="text" id="h-keys" placeholder="Click here to record shortcut" readonly required>
-                    </div>
-                    <div class="form-group">
-                        <label>AI Prompt Prefix</label>
-                        <input type="text" id="h-prefix" placeholder="e.g. Translate to Portuguese:" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Target Model</label>
-                        <select id="h-model" required>
-                            <option value="">Select a model...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Description (Optional)</label>
-                        <input type="text" id="h-desc" placeholder="e.g. Traduzir texto copiado">
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button type="submit">Save Hotkey</button>
-                        <button type="button" id="h-cancel" style="display:none; background:#cbd5e1; color:#334155;">Cancel</button>
-                    </div>
-                </form>
+    <!-- Custom Confirmation Modal -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal-box">
+            <div class="modal-title" id="confirm-title">&#9888;&#65039; Confirmar Exclusão</div>
+            <div class="modal-body" id="confirm-message">Você tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.</div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeConfirmModal(false)">Cancelar</button>
+                <button type="button" class="btn-primary" id="confirm-ok-btn" style="background:var(--danger);">Sim, Excluir</button>
             </div>
         </div>
     </div>
 
+    <!-- ==========================================================================
+         7. JAVASCRIPT APPLICATION LOGIC
+         ========================================================================== -->
     <script>
         const API_URL = '/api';
 
@@ -243,116 +1069,195 @@
         let editingModelId = null;
         let editingHotkeyId = null;
 
+        let activeTab = 'hotkeys-tab';
+        let confirmCallback = null;
+
+        /* ---------- 7.1 TOAST & MODAL HELPERS ---------- */
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            let icon = '&#10003;';
+            if (type === 'error') icon = '&#9888;&#65039;';
+            if (type === 'info') icon = '&#8505;&#65039;';
+
+            toast.innerHTML = `<span>${icon}</span><span>${escapeHtml(message)}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                toast.style.transition = 'all 0.2s ease';
+                setTimeout(() => toast.remove(), 200);
+            }, 3200);
+        }
+
+        function openConfirmModal(title, message, onConfirm) {
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-message').textContent = message;
+            confirmCallback = onConfirm;
+            document.getElementById('confirm-modal').classList.add('active');
+        }
+
+        function closeConfirmModal(confirmed) {
+            document.getElementById('confirm-modal').classList.remove('active');
+            if (confirmed && typeof confirmCallback === 'function') {
+                confirmCallback();
+            }
+            confirmCallback = null;
+        }
+
+        document.getElementById('confirm-ok-btn').addEventListener('click', () => closeConfirmModal(true));
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        /* ---------- 7.2 SHORTCUT KEY CHICLET FORMATTER ---------- */
+        function renderShortcutBadges(keyString) {
+            if (!keyString) return '<kbd>?</kbd>';
+            const keys = keyString.split('+');
+            return `<span class="shortcut-badge">` +
+                keys.map(k => `<kbd>${escapeHtml(k.trim())}</kbd>`).join('<span class="plus">+</span>') +
+                `</span>`;
+        }
+
+        /* ---------- 7.3 THEME & TAB SWITCHING ---------- */
+        function switchTheme(themeName) {
+            document.body.className = themeName;
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-theme') === themeName);
+            });
+            localStorage.setItem('iaKey_style_theme', themeName);
+
+            // Reapply layout classes for Command Hub
+            const shell = document.getElementById('content-shell');
+            if (themeName === 'theme-command') {
+                shell.classList.add('command-layout');
+            } else {
+                shell.classList.remove('command-layout');
+            }
+            updateTabVisibility();
+        }
+
+        function switchTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
+            });
+            updateTabVisibility();
+        }
+
+        function updateTabVisibility() {
+            const isCommand = document.body.classList.contains('theme-command');
+            document.querySelectorAll('.tab-content').forEach(content => {
+                if (isCommand) {
+                    content.classList.toggle('collapsed', content.id !== activeTab);
+                } else {
+                    content.classList.toggle('active', content.id === activeTab);
+                }
+            });
+        }
+
+        function updateBadges() {
+            document.getElementById('badge-hotkeys').textContent = rawHotkeys.length;
+            document.getElementById('badge-models').textContent = rawModels.length;
+            document.getElementById('badge-providers').textContent = rawProviders.length;
+        }
+
+        /* ---------- 7.4 LIVE SEARCH FILTER ---------- */
+        function filterItems() {
+            const query = document.getElementById('filter-input').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.cards-list .card');
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        /* ---------- 7.5 API: PROVIDERS ---------- */
         async function fetchProviders() {
-            const res = await fetch(`${API_URL}/providers`);
-            rawProviders = await res.json();
-            const list = document.getElementById('providers-list');
-            const select = document.getElementById('m-provider');
+            try {
+                const res = await fetch(`${API_URL}/providers`);
+                if (!res.ok) throw new Error('Falha ao carregar provedores');
+                rawProviders = await res.json();
+                const list = document.getElementById('providers-list');
+                const select = document.getElementById('m-provider');
 
-            list.innerHTML = '';
-            select.innerHTML = '<option value="">Select a provider...</option>';
-            providersMap = {};
+                list.innerHTML = '';
+                select.innerHTML = '<option value="">Selecione um provedor...</option>';
+                providersMap = {};
 
-            rawProviders.forEach(p => {
-                providersMap[p.id] = p.name;
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.innerHTML = `
-                <div class="card-actions">
-                    <button class="action-btn edit-btn" onclick="editProvider(${p.id})">Edit</button>
-                    <button class="action-btn delete-btn" onclick="deleteProvider(${p.id})">Delete</button>
-                </div>
-                <div class="card-title">${p.name}</div>
-                <div>URL: ${p.base_url}</div>
-            `;
-                list.appendChild(div);
+                if (rawProviders.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-placeholder">
+                            <div class="empty-icon">&#128268;</div>
+                            Nenhum provedor de IA cadastrado ainda. Adicione um provedor abaixo.
+                        </div>`;
+                }
 
-                const option = document.createElement('option');
-                option.value = p.id;
-                option.textContent = p.name;
-                select.appendChild(option);
-            });
-        }
+                rawProviders.forEach(p => {
+                    providersMap[p.id] = p.name;
+                    const div = document.createElement('div');
+                    div.className = 'card';
+                    div.innerHTML = `
+                        <div class="card-main">
+                            <div class="card-title-row">
+                                <span class="card-title">${escapeHtml(p.name)}</span>
+                                <span class="meta-tag">ID: ${p.id}</span>
+                            </div>
+                            <div class="card-meta">
+                                <span>URL: <em>${escapeHtml(p.base_url)}</em></span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-btn edit-btn" onclick="editProvider(${p.id})">&#9998; Editar</button>
+                            <button class="action-btn delete-btn" onclick="deleteProvider(${p.id})">&#128465; Excluir</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
 
-        async function fetchModels() {
-            const res = await fetch(`${API_URL}/models`);
-            rawModels = await res.json();
-            const list = document.getElementById('models-list');
-            const select = document.getElementById('h-model');
+                    const option = document.createElement('option');
+                    option.value = p.id;
+                    option.textContent = p.name;
+                    select.appendChild(option);
+                });
 
-            list.innerHTML = '';
-            select.innerHTML = '<option value="">Select a model...</option>';
-
-            rawModels.forEach(m => {
-                // Populate list
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.innerHTML = `
-                <div class="card-actions">
-                    <button class="action-btn edit-btn" onclick="editModel(${m.id})">Edit</button>
-                    <button class="action-btn delete-btn" onclick="deleteModel(${m.id})">Delete</button>
-                </div>
-                <div class="card-title">${m.name}</div>
-                <div>Provider: ${providersMap[m.provider_id] || 'Unknown'}</div>
-                <div>Model: ${m.model_name}</div>
-            `;
-                list.appendChild(div);
-
-                // Populate select
-                const option = document.createElement('option');
-                option.value = m.id;
-                option.textContent = m.name;
-                select.appendChild(option);
-            });
-        }
-
-        async function fetchHotkeys() {
-            const res = await fetch(`${API_URL}/hotkeys`);
-            rawHotkeys = await res.json();
-
-            // Also need models to display model name
-            const mRes = await fetch(`${API_URL}/models`);
-            const models = await mRes.json();
-            const modelMap = {};
-            models.forEach(m => modelMap[m.id] = m.name);
-
-            const list = document.getElementById('hotkeys-list');
-            list.innerHTML = '';
-
-            rawHotkeys.forEach(h => {
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.innerHTML = `
-                <div class="card-actions">
-                    <button class="action-btn edit-btn" onclick="editHotkey(${h.id})">Edit</button>
-                    <button class="action-btn delete-btn" onclick="deleteHotkey(${h.id})">Delete</button>
-                </div>
-                <div class="card-title">${h.keys} ${h.description ? `<span style="font-weight:normal; font-size:0.9em; color:#64748b;">- ${h.description}</span>` : ''}</div>
-                <div>Prefix: <em>${h.prefix}</em></div>
-                <div>Model: ${modelMap[h.model_id] || 'Unknown'}</div>
-            `;
-                list.appendChild(div);
-            });
+                updateBadges();
+                filterItems();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
         }
 
         function editProvider(id) {
             const p = rawProviders.find(x => x.id === id);
             if (!p) return;
+            switchTab('providers-tab');
             document.getElementById('p-name').value = p.name;
             document.getElementById('p-baseurl').value = p.base_url;
             document.getElementById('p-apikey').value = '';
-            document.getElementById('p-apikey').placeholder = 'Leave blank to keep current key';
+            document.getElementById('p-apikey').placeholder = 'Deixe em branco para manter a chave atual';
             document.getElementById('p-apikey').removeAttribute('required');
             editingProviderId = id;
-            document.querySelector('#provider-form button[type="submit"]').textContent = 'Update Provider';
-            document.getElementById('p-cancel').style.display = 'block';
-            document.querySelector('#provider-form').scrollIntoView({ behavior: 'smooth' });
+            document.querySelector('#provider-form button[type="submit"]').innerHTML = '&#10004; Atualizar Provedor';
+            document.getElementById('provider-form-title').innerHTML = '&#9998; Editando Provedor';
+            document.getElementById('p-cancel').style.display = 'inline-block';
+            document.querySelector('#provider-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function resetProviderForm() {
             document.getElementById('provider-form').reset();
             editingProviderId = null;
-            document.querySelector('#provider-form button[type="submit"]').textContent = 'Save Provider';
+            document.querySelector('#provider-form button[type="submit"]').innerHTML = '&#128190; Salvar Provedor';
+            document.getElementById('provider-form-title').innerHTML = '&#10133; Adicionar Novo Provedor';
             document.getElementById('p-apikey').setAttribute('required', 'true');
             document.getElementById('p-apikey').placeholder = 'sk-...';
             document.getElementById('p-cancel').style.display = 'none';
@@ -362,47 +1267,128 @@
         document.getElementById('provider-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const payload = {
-                name: document.getElementById('p-name').value,
-                base_url: document.getElementById('p-baseurl').value,
-                api_key: document.getElementById('p-apikey').value,
+                name: document.getElementById('p-name').value.trim(),
+                base_url: document.getElementById('p-baseurl').value.trim(),
+                api_key: document.getElementById('p-apikey').value.trim(),
             };
 
-            if (editingProviderId) {
-                if (!payload.api_key) delete payload.api_key;
-                await fetch(`${API_URL}/providers/${editingProviderId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            } else {
-                await fetch(`${API_URL}/providers`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            }
+            try {
+                if (editingProviderId) {
+                    if (!payload.api_key) delete payload.api_key;
+                    const res = await fetch(`${API_URL}/providers/${editingProviderId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error('Erro ao atualizar provedor');
+                    showToast('Provedor atualizado com sucesso!', 'success');
+                } else {
+                    const res = await fetch(`${API_URL}/providers`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error('Erro ao criar provedor');
+                    showToast('Provedor adicionado com sucesso!', 'success');
+                }
 
-            resetProviderForm();
-            await fetchProviders();
-            fetchModels(); 
+                resetProviderForm();
+                await fetchProviders();
+                fetchModels();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
         });
+
+        async function deleteProvider(id) {
+            openConfirmModal('Excluir Provedor', 'Deseja realmente remover este provedor? Modelos associados podem ser afetados.', async () => {
+                try {
+                    const res = await fetch(`${API_URL}/providers/${id}`, { method: 'DELETE' });
+                    if (!res.ok) {
+                        const data = await res.json().catch(() => ({}));
+                        throw new Error(data.detail || 'Erro ao excluir provedor');
+                    }
+                    showToast('Provedor removido!', 'success');
+                    fetchProviders();
+                    fetchModels();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            });
+        }
+
+        /* ---------- 7.6 API: MODELS ---------- */
+        async function fetchModels() {
+            try {
+                const res = await fetch(`${API_URL}/models`);
+                if (!res.ok) throw new Error('Falha ao carregar modelos');
+                rawModels = await res.json();
+                const list = document.getElementById('models-list');
+                const select = document.getElementById('h-model');
+
+                list.innerHTML = '';
+                select.innerHTML = '<option value="">Selecione um modelo...</option>';
+
+                if (rawModels.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-placeholder">
+                            <div class="empty-icon">&#129504;</div>
+                            Nenhum modelo cadastrado. Conecte um modelo ao seu provedor abaixo.
+                        </div>`;
+                }
+
+                rawModels.forEach(m => {
+                    const div = document.createElement('div');
+                    div.className = 'card';
+                    div.innerHTML = `
+                        <div class="card-main">
+                            <div class="card-title-row">
+                                <span class="card-title">${escapeHtml(m.name)}</span>
+                                <span class="meta-tag">${escapeHtml(providersMap[m.provider_id] || 'Desconhecido')}</span>
+                            </div>
+                            <div class="card-meta">
+                                <span>Modelo: <kbd style="font-size:0.75rem;">${escapeHtml(m.model_name)}</kbd></span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-btn edit-btn" onclick="editModel(${m.id})">&#9998; Editar</button>
+                            <button class="action-btn delete-btn" onclick="deleteModel(${m.id})">&#128465; Excluir</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+
+                    const option = document.createElement('option');
+                    option.value = m.id;
+                    option.textContent = `${m.name} (${m.model_name})`;
+                    select.appendChild(option);
+                });
+
+                updateBadges();
+                filterItems();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
 
         function editModel(id) {
             const m = rawModels.find(x => x.id === id);
             if (!m) return;
+            switchTab('models-tab');
             document.getElementById('m-name').value = m.name;
             document.getElementById('m-provider').value = m.provider_id;
             document.getElementById('m-modelname').value = m.model_name;
             editingModelId = id;
-            document.querySelector('#model-form button[type="submit"]').textContent = 'Update Model';
-            document.getElementById('m-cancel').style.display = 'block';
-            document.querySelector('#model-form').scrollIntoView({ behavior: 'smooth' });
+            document.querySelector('#model-form button[type="submit"]').innerHTML = '&#10004; Atualizar Modelo';
+            document.getElementById('model-form-title').innerHTML = '&#9998; Editando Modelo';
+            document.getElementById('m-cancel').style.display = 'inline-block';
+            document.querySelector('#model-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function resetModelForm() {
             document.getElementById('model-form').reset();
             editingModelId = null;
-            document.querySelector('#model-form button[type="submit"]').textContent = 'Save Model';
+            document.querySelector('#model-form button[type="submit"]').innerHTML = '&#128190; Salvar Modelo';
+            document.getElementById('model-form-title').innerHTML = '&#10133; Adicionar Novo Modelo';
             document.getElementById('m-cancel').style.display = 'none';
         }
         document.getElementById('m-cancel').addEventListener('click', resetModelForm);
@@ -410,47 +1396,128 @@
         document.getElementById('model-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const payload = {
-                name: document.getElementById('m-name').value,
+                name: document.getElementById('m-name').value.trim(),
                 provider_id: parseInt(document.getElementById('m-provider').value),
-                model_name: document.getElementById('m-modelname').value,
+                model_name: document.getElementById('m-modelname').value.trim(),
             };
 
-            if (editingModelId) {
-                await fetch(`${API_URL}/models/${editingModelId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            } else {
-                await fetch(`${API_URL}/models`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            }
+            try {
+                if (editingModelId) {
+                    const res = await fetch(`${API_URL}/models/${editingModelId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error('Erro ao atualizar modelo');
+                    showToast('Modelo atualizado com sucesso!', 'success');
+                } else {
+                    const res = await fetch(`${API_URL}/models`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error('Erro ao criar modelo');
+                    showToast('Modelo adicionado com sucesso!', 'success');
+                }
 
-            resetModelForm();
-            fetchModels();
-            fetchHotkeys();
+                resetModelForm();
+                fetchModels();
+                fetchHotkeys();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
         });
+
+        async function deleteModel(id) {
+            openConfirmModal('Excluir Modelo', 'Deseja realmente remover este modelo? Atalhos que dependem dele precisarão ser reconfigurados.', async () => {
+                try {
+                    const res = await fetch(`${API_URL}/models/${id}`, { method: 'DELETE' });
+                    if (!res.ok) {
+                        const data = await res.json().catch(() => ({}));
+                        throw new Error(data.detail || 'Erro ao excluir modelo');
+                    }
+                    showToast('Modelo removido!', 'success');
+                    fetchModels();
+                    fetchHotkeys();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            });
+        }
+
+        /* ---------- 7.7 API: HOTKEYS ---------- */
+        async function fetchHotkeys() {
+            try {
+                const res = await fetch(`${API_URL}/hotkeys`);
+                if (!res.ok) throw new Error('Falha ao carregar atalhos');
+                rawHotkeys = await res.json();
+
+                // Fetch models to display model name accurately
+                const mRes = await fetch(`${API_URL}/models`);
+                const models = await mRes.json();
+                const modelMap = {};
+                models.forEach(m => modelMap[m.id] = m.name);
+
+                const list = document.getElementById('hotkeys-list');
+                list.innerHTML = '';
+
+                if (rawHotkeys.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-placeholder">
+                            <div class="empty-icon">&#9889;</div>
+                            Nenhum atalho configurado. Crie seu primeiro atalho de IA no formulário abaixo!
+                        </div>`;
+                }
+
+                rawHotkeys.forEach(h => {
+                    const div = document.createElement('div');
+                    div.className = 'card';
+                    div.innerHTML = `
+                        <div class="card-main">
+                            <div class="card-title-row">
+                                ${renderShortcutBadges(h.keys)}
+                                ${h.description ? `<span class="card-title">&bull; ${escapeHtml(h.description)}</span>` : ''}
+                            </div>
+                            <div class="card-meta">
+                                <span>Prompt: <em>"${escapeHtml(h.prefix)}"</em></span>
+                                <span class="meta-tag">&#129504; ${escapeHtml(modelMap[h.model_id] || 'Modelo #' + h.model_id)}</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-btn edit-btn" onclick="editHotkey(${h.id})">&#9998; Editar</button>
+                            <button class="action-btn delete-btn" onclick="deleteHotkey(${h.id})">&#128465; Excluir</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+
+                updateBadges();
+                filterItems();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
 
         function editHotkey(id) {
             const h = rawHotkeys.find(x => x.id === id);
             if (!h) return;
+            switchTab('hotkeys-tab');
             document.getElementById('h-keys').value = h.keys;
             document.getElementById('h-prefix').value = h.prefix;
             document.getElementById('h-model').value = h.model_id;
             document.getElementById('h-desc').value = h.description || '';
             editingHotkeyId = id;
-            document.querySelector('#hotkey-form button[type="submit"]').textContent = 'Update Hotkey';
-            document.getElementById('h-cancel').style.display = 'block';
-            document.querySelector('#hotkey-form').scrollIntoView({ behavior: 'smooth' });
+            document.querySelector('#hotkey-form button[type="submit"]').innerHTML = '&#10004; Atualizar Atalho';
+            document.getElementById('hotkey-form-title').innerHTML = '&#9998; Editando Atalho';
+            document.getElementById('h-cancel').style.display = 'inline-block';
+            document.querySelector('#hotkey-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function resetHotkeyForm() {
             document.getElementById('hotkey-form').reset();
             editingHotkeyId = null;
-            document.querySelector('#hotkey-form button[type="submit"]').textContent = 'Save Hotkey';
+            document.querySelector('#hotkey-form button[type="submit"]').innerHTML = '&#128190; Salvar Atalho';
+            document.getElementById('hotkey-form-title').innerHTML = '&#10133; Adicionar Novo Atalho';
             document.getElementById('h-cancel').style.display = 'none';
         }
         document.getElementById('h-cancel').addEventListener('click', resetHotkeyForm);
@@ -458,60 +1525,52 @@
         document.getElementById('hotkey-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const payload = {
-                keys: document.getElementById('h-keys').value,
-                prefix: document.getElementById('h-prefix').value,
+                keys: document.getElementById('h-keys').value.trim(),
+                prefix: document.getElementById('h-prefix').value.trim(),
                 model_id: parseInt(document.getElementById('h-model').value),
-                description: document.getElementById('h-desc').value,
+                description: document.getElementById('h-desc').value.trim(),
             };
 
-            if (editingHotkeyId) {
-                await fetch(`${API_URL}/hotkeys/${editingHotkeyId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            } else {
-                await fetch(`${API_URL}/hotkeys`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            }
+            try {
+                if (editingHotkeyId) {
+                    const res = await fetch(`${API_URL}/hotkeys/${editingHotkeyId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error('Erro ao atualizar atalho');
+                    showToast('Atalho atualizado com sucesso!', 'success');
+                } else {
+                    const res = await fetch(`${API_URL}/hotkeys`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error('Erro ao criar atalho');
+                    showToast('Atalho salvo com sucesso!', 'success');
+                }
 
-            resetHotkeyForm();
-            fetchHotkeys();
+                resetHotkeyForm();
+                fetchHotkeys();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
         });
 
-        async function deleteProvider(id) {
-            if (!confirm('Are you sure?')) return;
-            const res = await fetch(`${API_URL}/providers/${id}`, { method: 'DELETE' });
-            if (!res.ok) {
-                const data = await res.json();
-                alert(data.detail || 'Error deleting provider');
-            } else {
-                fetchProviders();
-            }
-        }
-
-        async function deleteModel(id) {
-            if (!confirm('Are you sure?')) return;
-            const res = await fetch(`${API_URL}/models/${id}`, { method: 'DELETE' });
-            if (!res.ok) {
-                const data = await res.json();
-                alert(data.detail || 'Error deleting model');
-            } else {
-                fetchModels();
-                fetchHotkeys();
-            }
-        }
-
         async function deleteHotkey(id) {
-            if (!confirm('Are you sure?')) return;
-            await fetch(`${API_URL}/hotkeys/${id}`, { method: 'DELETE' });
-            fetchHotkeys();
+            openConfirmModal('Excluir Atalho', 'Tem certeza de que deseja remover este atalho de teclado?', async () => {
+                try {
+                    const res = await fetch(`${API_URL}/hotkeys/${id}`, { method: 'DELETE' });
+                    if (!res.ok) throw new Error('Erro ao excluir atalho');
+                    showToast('Atalho removido!', 'success');
+                    fetchHotkeys();
+                } catch (err) {
+                    showToast(err.message, 'error');
+                }
+            });
         }
 
-        // Hotkey Recording Logic
+        /* ---------- 7.8 INTERACTIVE HOTKEY RECORDER ---------- */
         const hKeysInput = document.getElementById('h-keys');
         let isRecording = false;
         let pressedKeys = new Set();
@@ -520,7 +1579,7 @@
             e.preventDefault();
             isRecording = true;
             hKeysInput.classList.add('recording');
-            hKeysInput.value = 'Recording... Press shortcut, then click away';
+            hKeysInput.value = 'Gravando... Pressione a combinação';
             pressedKeys.clear();
         });
 
@@ -533,7 +1592,7 @@
 
             if (key === 'control') keyName = 'ctrl';
             if (key === ' ') keyName = 'space';
-            if (key === 'meta') keyName = 'win'; // or cmd
+            if (key === 'meta') keyName = 'win';
 
             pressedKeys.add(keyName);
             hKeysInput.value = Array.from(pressedKeys).join('+');
@@ -541,7 +1600,6 @@
 
         document.addEventListener('keyup', (e) => {
             if (!isRecording) return;
-            // Keep keys in the Set to allow multi-key combos
         });
 
         document.addEventListener('mousedown', (e) => {
@@ -552,17 +1610,22 @@
                     hKeysInput.value = '';
                 } else {
                     hKeysInput.value = Array.from(pressedKeys).join('+');
+                    showToast(`Atalho gravado: ${hKeysInput.value}`, 'info');
                 }
             }
         });
 
-
-        // Initial load
+        /* ---------- 7.9 INITIALIZATION ---------- */
         async function init() {
+            // Restore saved theme
+            const savedTheme = localStorage.getItem('iaKey_style_theme') || 'theme-raycast';
+            switchTheme(savedTheme);
+
             await fetchProviders();
             await fetchModels();
-            fetchHotkeys();
+            await fetchHotkeys();
         }
+
         init();
     </script>
 </body>
