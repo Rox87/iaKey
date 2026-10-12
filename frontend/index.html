@@ -84,35 +84,7 @@
             --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
         }
 
-        /* ⚡ 3. COMMAND HUB (Split Master-Detail Workbench) */
-        body.theme-command {
-            --bg-page: #0a0b0e;
-            --bg-surface: #11131a;
-            --bg-surface-elevated: #181b24;
-            --bg-input: #0e1017;
-            --border-subtle: #1f2333;
-            --border-medium: #2e344a;
-            --border-focus: #06b6d4;
-            --text-title: #f1f5f9;
-            --text-body: #94a3b8;
-            --text-muted: #64748b;
-            --accent: #06b6d4;
-            --accent-hover: #0891b2;
-            --accent-subtle: rgba(6, 182, 212, 0.15);
-            --accent-glow: 0 0 20px rgba(6, 182, 212, 0.3);
-            --kbd-bg: #161a25;
-            --kbd-border: #283044;
-            --kbd-shadow: #0a0c12;
-            --kbd-text: #38bdf8;
-            --danger: #fb7185;
-            --danger-bg: rgba(251, 113, 133, 0.15);
-            --warning: #fbbf24;
-            --warning-bg: rgba(251, 191, 36, 0.15);
-            --success: #34d399;
-            --success-bg: rgba(52, 211, 153, 0.15);
-            --header-glass: rgba(17, 19, 26, 0.9);
-            --box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.6);
-        }
+
 
         /* ==========================================================================
            2. GLOBAL STYLES & RESET
@@ -237,23 +209,7 @@
             flex: 1;
         }
 
-        /* Layout modifications in Command Hub mode */
-        body.theme-command .main-container {
-            max-width: 1380px;
-        }
 
-        body.theme-command .command-layout {
-            display: grid;
-            grid-template-columns: 440px 1fr;
-            gap: 24px;
-            align-items: start;
-        }
-
-        @media (max-width: 900px) {
-            body.theme-command .command-layout {
-                grid-template-columns: 1fr;
-            }
-        }
 
         /* Navigation Tabs & Controls */
         .view-controls {
@@ -784,14 +740,7 @@
             display: block;
         }
 
-        /* In Command Hub mode, sections can display side-by-side or stacked cleanly */
-        body.theme-command .tab-content {
-            display: block !important;
-        }
 
-        body.theme-command .tab-content.collapsed {
-            display: none !important;
-        }
 
         /* Responsive tweaks */
         @media (max-width: 650px) {
@@ -815,7 +764,7 @@
     </style>
 </head>
 
-<body class="theme-raycast">
+<body class="theme-light">
 
     <!-- Sticky Header with Brand and Style Switcher -->
     <header class="app-header">
@@ -830,14 +779,11 @@
 
             <!-- Style Selector Toolbar -->
             <div class="theme-switcher">
-                <button type="button" class="theme-btn active" data-theme="theme-raycast" onclick="switchTheme('theme-raycast')">
-                    <span>&#127769;</span> Raycast Dark
-                </button>
-                <button type="button" class="theme-btn" data-theme="theme-light" onclick="switchTheme('theme-light')">
+                <button type="button" class="theme-btn active" data-theme="theme-light" onclick="switchTheme('theme-light')">
                     <span>&#9728;&#65039;</span> Clean Light
                 </button>
-                <button type="button" class="theme-btn" data-theme="theme-command" onclick="switchTheme('theme-command')">
-                    <span>&#9889;</span> Command Hub
+                <button type="button" class="theme-btn" data-theme="theme-raycast" onclick="switchTheme('theme-raycast')">
+                    <span>&#127769;</span> Raycast Dark
                 </button>
             </div>
         </div>
@@ -1135,14 +1081,6 @@
                 btn.classList.toggle('active', btn.getAttribute('data-theme') === themeName);
             });
             localStorage.setItem('iaKey_style_theme', themeName);
-
-            // Reapply layout classes for Command Hub
-            const shell = document.getElementById('content-shell');
-            if (themeName === 'theme-command') {
-                shell.classList.add('command-layout');
-            } else {
-                shell.classList.remove('command-layout');
-            }
             updateTabVisibility();
         }
 
@@ -1155,13 +1093,8 @@
         }
 
         function updateTabVisibility() {
-            const isCommand = document.body.classList.contains('theme-command');
             document.querySelectorAll('.tab-content').forEach(content => {
-                if (isCommand) {
-                    content.classList.toggle('collapsed', content.id !== activeTab);
-                } else {
-                    content.classList.toggle('active', content.id === activeTab);
-                }
+                content.classList.toggle('active', content.id === activeTab);
             });
         }
 
@@ -1617,8 +1550,8 @@
 
         /* ---------- 7.9 INITIALIZATION ---------- */
         async function init() {
-            // Restore saved theme
-            const savedTheme = localStorage.getItem('iaKey_style_theme') || 'theme-raycast';
+            // Restore saved theme (Clean Light default)
+            const savedTheme = localStorage.getItem('iaKey_style_theme') || 'theme-light';
             switchTheme(savedTheme);
 
             await fetchProviders();
